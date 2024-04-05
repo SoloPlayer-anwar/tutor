@@ -1,6 +1,6 @@
 @extends('layouts.bootstrap')
 @section('title')
-Data Admin
+Kategori Izin
 @endsection
 
 @section('content')
@@ -8,15 +8,15 @@ Data Admin
     <div class="col-12">
       <div class="card card-primary">
         <div class="card-header">
-            <h3>Data Admin</h3>
+            <h3>Data Kategori Izin</h3>
         </div>
         <div class="card-body table-responsive">
             @include('alert.success')
             <br>
-            <form method="GET" action="{{route('admin.index')}}">
+            <form method="GET" action="{{route('izin.index')}}">
                 <div class="row">
                     <div class="col-2">
-                        <b>Search Role</b>
+                        <b>Search Nama</b>
                     </div>
 
                     <div class="col-3">
@@ -32,36 +32,27 @@ Data Admin
             </form>
             <hr>
             <br>
-            <a href="{{route('admin.create')}}" class="btn btn-success">+ Tambahkan Admin Baru</a>
+            <a href="{{route('izin.create')}}" class="btn btn-success">+ Tambahkan Izin Baru</a>
             <hr>
             <table class="table table-bordered">
 		<thead>
                 <tr>
                     <th>No</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Dinas</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
 		</thead>
                 <tbody>
-                    @foreach ($admin as $row )
+                    @foreach ($izin as $row )
                     <tr>
-                        <td>{{ $loop->iteration + ($admin->perPage() * ($admin->currentPage() - 1) ) }}</td>
-                        <td>{{$row->name}}</td>
-                        <td>{{$row->email}}</td>
-                        <td>{{$row->role}}</td>
-                        @if (empty($row->dinas->nama_dinas))
-                        <td>Kosong</td>
-                        @else
-                            <td>{{ $row->dinas->nama_dinas }}</td>
-                        @endif
-
+                        <td>{{ $loop->iteration + ($izin->perPage() * ($izin->currentPage() - 1) ) }}</td>
+                        <td>{{$row->nama_ijin}}</td>
+                        <td>{{$row->status_izin}}</td>
                         <td>
 
-                            <a href="{{ route ('admin.edit', [$row->id])}}" class="btn btn-warning btn-sm" style="margin: 10px;">Edit</a>
-                            <form action="{{ route('admin.destroy', [$row->id]) }}" class="d-inline" method="POST" onsubmit="return confirm('Apakah anda yakin Delete ?')">
+                            <a href="{{ route ('izin.edit', [$row->id])}}" class="btn btn-warning btn-sm" style="margin: 10px;">Edit</a>
+                            <form action="{{ route('izin.destroy', [$row->id]) }}" class="d-inline" method="POST" onsubmit="return confirm('Apakah anda yakin Delete ?')">
                                 @csrf
                                 {{method_field('DELETE')}}
                                 <input type="submit" class="btn btn-danger btn-sm" value="Delete">
@@ -73,7 +64,7 @@ Data Admin
             </table>
         </div>
         <div class="card-footer">
-            {{$admin->links()}}
+            {{$izin->links()}}
         </div>
       </div>
     </div>

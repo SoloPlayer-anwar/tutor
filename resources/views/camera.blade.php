@@ -14,7 +14,7 @@
       border-radius: 8px;
       max-width: auto; /* Lebar maksimum video */
       max-height: auto; /* Tinggi maksimum video */
-   /* Margin atas 10px */
+      /* Margin atas 10px */
     }
 
     /* Menetapkan posisi kamera secara responsif */
@@ -22,14 +22,14 @@
       display: flex;
       justify-content: center;
       align-items: center;
-     /* Untuk membuat kamera menempati tinggi layar sepenuhnya */
+      /* Untuk membuat kamera menempati tinggi layar sepenuhnya */
     }
 
     /* Mengatur margin bawah untuk tombol capture */
     #captureButton {
-       /* Margin bawah 10px */
-       margin-top: 10px;
-       width: 80%;
+      /* Margin bawah 10px */
+      margin-top: 10px;
+      width: 80%;
     }
   </style>
 </head>
@@ -47,7 +47,13 @@
             <div id="videoContainer" class="video-container d-none">
               <video id="videoElement"></video>
             </div>
+            {{-- <div class="form-group">
+                <label for="photo">Photo</label>
+                <input type="file" class="form-control-file {{$errors->first('photo') ? 'is-invalid' : ''}}" required name="photo" id="photo">
+                <span class="error invalid-feedback"></span>
+            </div> --}}
             <button id="captureButton" class="btn btn-success d-none">Capture</button>
+
           </div>
         </div>
       </div>
@@ -83,31 +89,42 @@
           });
       });
 
+      function dataURItoBlob(dataURI) {
+        const binaryString = window.atob(dataURI.split(',')[1]);
+        const array = [];
+        for (let i = 0; i < binaryString.length; i++) {
+          array.push(binaryString.charCodeAt(i));
+        }
+        return new Blob([new Uint8Array(array)], { type: 'image/png' });
+      }
+
       captureButton.addEventListener('click', function() {
         var canvas = document.createElement('canvas');
         canvas.width = videoElement.videoWidth;
         canvas.height = videoElement.videoHeight;
         canvas.getContext('2d').drawImage(videoElement, 0, 0, canvas.width, canvas.height);
 
-        // Mengonversi gambar menjadi blob
-        canvas.toBlob(function(blob) {
-          // Membuat nama file dengan tanggal saat ini
-          var today = new Date();
-          var fileName = today.toISOString().slice(0,10) + '.png';
+        // Mengonversi gambar menjadi base64 data URI
+        const dataURI = canvas.toDataURL('image/png');
 
-          // Membuat URL objek untuk blob
-          var url = URL.createObjectURL(blob);
+        // Mengonversi data URI menjadi file binary
+        const blob = dataURItoBlob(dataURI);
 
-          // Membuat elemen <a> untuk men-download gambar
-          var link = document.createElement('a');
-          link.href = url;
-          link.download = fileName;
-          document.body.appendChild(link);
-          link.click();
+        // Membuat objek File dari blob
+        const file = new File([blob], 'capture.png', { type: 'image/png' });
 
-          // Membersihkan URL objek setelah selesai
-          URL.revokeObjectURL(url);
-        }, 'image/png');
+        // Menetapkan file ke input file
+        const photoInput = document.getElementById('photo');
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        photoInput.files = dataTransfer.files;
+      });
+
+      const photoInput = document.getElementById('photo');
+      photoInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        // Lakukan tindakan yang diperlukan dengan file yang diunggah
+        console.log('File yang diunggah:', file);
       });
     });
   </script>

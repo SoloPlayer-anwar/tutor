@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dinas;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -20,7 +21,7 @@ class AdminController extends Controller
         $filterKeywords = $request->get('keyword');
         $data['currentPage'] = 'admin.index';
 
-        $query = User::query();
+        $query = User::with(['dinas']);
 
         if($filterKeywords) {
             $query->where('email', 'like', '%' . $filterKeywords . '%');
@@ -37,7 +38,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        return view('admin.create');
+        $dinas = Dinas::all();
+        return view('admin.create', compact('dinas'));
     }
 
     /**
@@ -52,7 +54,8 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'role' => 'sometimes'
+            'role' => 'sometimes',
+            'dinas_id' => 'sometimes|exists:dinas,id'
         ]);
 
         if($validator->fails()) {
@@ -70,6 +73,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'dinas_id' => $request->dinas_id
         ]);
         return redirect()->route('admin.index')->with('status', 'Pembuatan data berhasil');
     }
@@ -94,6 +98,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         $data['admin'] = User::findOrFail($id);
+        $data['dinas'] = Dinas::all();
         return view('admin.edit', $data);
     }
 
@@ -111,7 +116,8 @@ class AdminController extends Controller
             'name' => 'sometimes|string|max:255',
             'email' => 'sometimes|string|email|max:255',
             'password' => 'sometimes|string|min:6|confirmed',
-            'role' => 'sometimes|string|max:255'
+            'role' => 'sometimes|string|max:255',
+            'dinas_id' => 'sometimes|exists:dinas,id'
         ]);
 
         if($validator->fails()) {

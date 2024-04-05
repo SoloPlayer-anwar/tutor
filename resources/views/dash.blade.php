@@ -26,7 +26,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <img src="{{asset('img/brand/growup-logo.svg')}}" alt="brand" style="background: rebeccapurple">
+                <img src="{{asset('img/brand/growup-logo.svg')}}" alt="brand">
                 <span>Fakta Integritas</span>
             </a>
             <button class="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse"
@@ -37,7 +37,7 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ms-auto">
                     <a class="nav-link active" aria-current="page" href="#">Product</a>
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="{{route('search.index')}}">Tracking Berkas</a>
                     <a class="nav-link" href="#">About</a>
                     <a class="nav-link" href="#">Contatc</a>
                 </div>

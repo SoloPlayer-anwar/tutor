@@ -43,9 +43,20 @@ Create Admin
                         <select class="form-control {{$errors->first('role') ? 'is-invalid' : ''}}" name="role" id="role">
                             <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>user</option>
                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>admin</option>
+                            <option value="master" {{ old('role') == 'master' ? 'selected' : '' }}>Master</option>
                         </select>
                         <span class="error invalid-feedback">{{$errors->first('role')}}</span>
                     </div>
+
+                    <div class="form-group">
+                        <label for="dinas_id">Dinas</label>
+                        <select name="dinas_id" id="dinas_id" class="form-control">
+                            <option value="">>-- Pilih Kategori --<</option>
+                            @foreach ($dinas as $dinasty )
+                            <option value="{{$dinasty->id}}">{{$dinasty->nama_dinas}}</option>
+                            @endforeach
+                        </select>
+                      </div>
 
                 </div>
                 <div class="card-footer">
