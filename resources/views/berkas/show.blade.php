@@ -116,7 +116,7 @@ Detail Berkas Pengajuan
                                 <input type="submit" class="btn btn-danger btn-sm" value="Delete">
                             </form>
                             @elseif (Auth::user()->dinas->nama_dinas == $optionRow->user->dinas->nama_dinas)
-                            <a href="{{ route ('optiondinas.edit', [$optionRow->id])}}" class="btn btn-success btn-sm">Verifikasi Ket.</a>
+                            <a href="{{ route ('optiondinas.edit', [$optionRow->id])}}" class="btn btn-warning btn-sm">Edit Keterangan</a>
                             @endif
                         </td>
                     </tr>
@@ -126,9 +126,14 @@ Detail Berkas Pengajuan
             </table>
             <hr>
             <br>
-            @if (Auth::user()->role == "master")
-            <a href="{{route('optiondinas.create', ['berkas_id' => $berkas->id])}}" class="btn btn-primary">Tambahkan Dinas Bersangkutan</a>
+            @foreach ($berkas->optiondinas as $optiondinas)
+            @if (Auth::user()->id == $optiondinas->user_id)
+                <a href="{{route('optiondinas.create', ['berkas_id' => $berkas->id])}}" class="btn btn-primary btn-sm">Tambahkan Keterangan</a>
+                @elseif (Auth::user()->role == "master")
+                <a href="{{route('optiondinas.create', ['berkas_id' => $berkas->id])}}" class="btn btn-primary">Tambahkan Dinas Bersangkutan</a>
             @endif
+            @break
+        @endforeach
         </div>
         <div class="card-footer">
         </div>

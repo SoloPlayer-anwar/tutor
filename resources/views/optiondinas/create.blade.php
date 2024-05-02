@@ -21,15 +21,23 @@ Dinas Bersangkutan
                         <input type="text" class="form-control"  hidden id="berkas_id" name="berkas_id" placeholder="Enter Surat Id" value="{{$berkas_id}}">
                     </div>
 
-                    <div class="form-group">
-                        <label for="user_id">Dinas</label>
-                        <select name="user_id" id="user_id" class="form-control">
-                            <option value="">>-- Pilih Dinas --<</option>
-                            @foreach ($user as $users )
-                            <option value="{{$users->id}}">{{$users->name}} - {{$users->dinas->nama_dinas}}</option>
-                            @endforeach
-                        </select>
+                   @if (Auth::user()->role == "master")
+                   <div class="form-group">
+                    <label for="user_id">Dinas</label>
+                    <select name="user_id" id="user_id" class="form-control">
+                        <option value="">>-- Pilih Dinas --<</option>
+                        @foreach ($user as $users )
+                        <option value="{{$users->id}}">{{$users->name}} - {{$users->dinas->nama_dinas}}</option>
+                        @endforeach
+                    </select>
                     </div>
+                   @else
+                   <div class="form-group">
+                    <div class="form-group" hidden>
+                        <label for="user_id"></label>
+                        <input type="text" class="form-control"   id="user_id" name="user_id" placeholder="Enter Surat Id" value="{{Auth::user()->id}}">
+                    </div>
+                   @endif
 
                     <div class="form-group">
                         <label for="keterangan_dinas">Keterangan Dinas</label>

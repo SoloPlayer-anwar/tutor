@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Berkas;
 use App\Models\Izin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class BerkasController extends Controller
@@ -19,7 +20,10 @@ class BerkasController extends Controller
         $filterKeyword = $request->get('keyword');
         $filterSurvey = $request->get('survey');
 
-        $query = Berkas::with(['izin' , 'optiondinas' , 'optiondinas.user']);
+        $query = Berkas::with(['izin', 'optiondinas', 'optiondinas.user'])
+            ->whereHas('optiondinas', function ($q) {
+                $q->where('user_id', Auth::user()->id);
+            });
 
         if ($filterKeyword) {
             $query->where("nik_bm", "LIKE", "%$filterKeyword%");
@@ -30,6 +34,7 @@ class BerkasController extends Controller
         }
 
         $berkas['berkas'] = $query->paginate(10);
+
         // dd($berkas['berkas']->toArray());
 
         return view('berkas.index', $berkas);
